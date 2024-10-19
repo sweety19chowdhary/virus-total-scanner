@@ -3,22 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Result</title>
+    <title>Analysis Results</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #eaeaea;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        .upper-section {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 80%;
+            text-align: center;
+        }
+        .upper-section p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .summary {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 80%;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .container {
+            width: 80%;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .result-column {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin: 10px;
+            padding: 20px;
+            width: 30%;
+            transition: transform 0.2s;
+        }
+        .result-column:hover {
+            transform: scale(1.05);
+        }
+        h3 {
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .malicious {
+            background-color: #ff4c4c; /* Red for malicious */
+        }
+        .undetected {
+            background-color: #4caf50; /* Green for undetected */
+        }
+        .unsupported {
+            background-color: #ff9800; /* Orange for unsupported */
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+            font-size: 16px;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+        a {
+            text-decoration: none;
+            color: #4CAF50;
+            font-size: 20px;
+            padding: 10px 15px;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+            margin-top: 20px;
+            display: inline-block;
+        }
+        a:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-    <h1>Analysis Results</h1>
-    <p><strong>Name:</strong> {{ analysis_details.name }}</p>
-    <p><strong>Size:</strong> {{ analysis_details.size }} KB</p>
-    <p><strong>Description:</strong> {{ analysis_details.description }}</p>
-    <p><strong>SHA-256 Hash:</strong> {{ analysis_details.hash }}</p>
-    <h2>Results:</h2>
-    <ul>
-    {% for result in analysis_details.results %}
-        <li>{{ result.name }}: {{ result.verdict }}</li>
-    {% endfor %}
-    </ul>
-    <h2>Summary:</h2>
-    <p>{{ analysis_details.summary }}</p>
+
+    <h1>File Analysis Results</h1>
+
+    <div class="upper-section">
+        <p><strong>File Name:</strong> {{ analysis_details.name }}</p>
+        <p><strong>File Size:</strong> {{ analysis_details.size }} KB</p>
+        <p><strong>Description:</strong> {{ analysis_details.description }}</p>
+        <p><strong>SHA-256 Hash:</strong> {{ analysis_details.hash }}</p>
+    </div>
+
+    <div class="summary">
+        <h2>Summary</h2>
+        <p>{{ analysis_details.summary }}</p>
+    </div>
+
+    <h2>Detailed Analysis</h2>
+    <div class="container">
+        <div class="result-column malicious">
+            <h3>Malicious</h3>
+            <ul>
+            {% for result in analysis_details.results %}
+                {% if result.verdict == 'malicious' %}
+                <li>{{ result.name }}</li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        </div>
+        <div class="result-column undetected">
+            <h3>Undetected</h3>
+            <ul>
+            {% for result in analysis_details.results %}
+                {% if result.verdict == 'undetected' %}
+                <li>{{ result.name }}</li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        </div>
+        <div class="result-column unsupported">
+            <h3>Type Unsupported</h3>
+            <ul>
+            {% for result in analysis_details.results %}
+                {% if result.verdict == 'type-unsupported' %}
+                <li>{{ result.name }}</li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <br>
     <a href="{{ url_for('index') }}">Scan Another File</a>
+
 </body>
 </html>
